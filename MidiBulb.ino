@@ -1,8 +1,6 @@
 #include <MIDI.h>
-#include <SoftwareSerial.h>
 
-SoftwareSerial softSerial(2,3);
-MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiA);
+MIDI_CREATE_DEFAULT_INSTANCE();
 
 const int bulbPinA = 4;
 const int bulbPinB = 5;
@@ -24,6 +22,7 @@ void handleNoteOn(byte channel, byte pitch, byte velocity)
       break;
     case 3:
       digitalWrite(bulbPinD, HIGH);
+      break;
   }
   digitalWrite(statusLed, HIGH);
 }
@@ -42,15 +41,16 @@ void handleNoteOff(byte channel, byte pitch, byte velocity)
       break;
     case 3:
       digitalWrite(bulbPinD, LOW);
+      break;
   }
   digitalWrite(statusLed, LOW);
 }
 
 void setup()
 {
-    midiA.setHandleNoteOn(handleNoteOn);
-    midiA.setHandleNoteOff(handleNoteOff);
-    midiA.begin(MIDI_CHANNEL_OMNI);
+    MIDI.setHandleNoteOn(handleNoteOn);
+    MIDI.setHandleNoteOff(handleNoteOff);
+    MIDI.begin(MIDI_CHANNEL_OMNI);
     
     pinMode(bulbPinA, OUTPUT);
     pinMode(bulbPinB, OUTPUT);
@@ -60,5 +60,5 @@ void setup()
 
 void loop()
 {
-    midiA.read();
+    MIDI.read();
 }
